@@ -47,4 +47,24 @@ public class DeviceController {
         if (validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         else return ds.update(id, payload);
     }
+
+    @PatchMapping("/{deviceId}/assign")
+    private Device assignDevice(@PathVariable long deviceId, @RequestParam("employeeId") long employeeId) {
+        return ds.assign(deviceId, employeeId);
+    }
+
+    @PatchMapping("/{id}/available")
+    private Device makeDeviceAvailable(@PathVariable long id) {
+        return ds.makeAvailable(id);
+    }
+
+    @PatchMapping("/{id}/dismiss")
+    private Device dismissDevice(@PathVariable long id) {
+        return ds.dismiss(id);
+    }
+
+    @PatchMapping("/{id}/maintenance")
+    private Device startDeviceMaintenance(@PathVariable long id) {
+        return ds.startMaintenance(id);
+    }
 }
