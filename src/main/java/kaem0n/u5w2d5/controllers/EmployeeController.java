@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/employees")
@@ -46,5 +49,10 @@ public class EmployeeController {
     private Employee updateEmployee(@PathVariable long id, @RequestBody @Validated EmployeeDTO payload, BindingResult validation) {
         if (validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         else return es.update(id, payload);
+    }
+
+    @PatchMapping("/{id}/avatar")
+    private Employee changeAvatar(@PathVariable long id, @RequestParam("avatar") MultipartFile img) throws IOException {
+        return es.changeAvatar(id, img);
     }
 }

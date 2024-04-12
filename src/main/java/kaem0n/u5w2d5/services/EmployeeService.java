@@ -1,5 +1,7 @@
 package kaem0n.u5w2d5.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import kaem0n.u5w2d5.entities.Employee;
 import kaem0n.u5w2d5.exceptions.BadRequestException;
 import kaem0n.u5w2d5.exceptions.NotFoundException;
@@ -11,13 +13,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Service
 public class EmployeeService {
     @Autowired
     private EmployeeDAO ed;
+    @Autowired
+    private Cloudinary c;
 
     public Page<Employee> findAll(int page, int size, String sort) {
         if (size > 50) size = 50;
@@ -52,5 +58,13 @@ public class EmployeeService {
         if (!Objects.equals(found.getEmail(), payload.email()) && !ed.existsByEmail(payload.email())) found.setEmail(payload.email());
         else if (!Objects.equals(found.getEmail(), payload.email()) && ed.existsByEmail(payload.email())) throw new BadRequestException("Email " + payload.email() + " is already taken.");
         return ed.save(found);
+    }
+
+    public Employee changeAvatar(long id, MultipartFile img) throws IOException {
+        Employee found = this.findById(id);
+        String url = (String) c.uploader().upload(img.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatarUrl(url);
+        ed.save(found);
+        return found;
     }
 }
