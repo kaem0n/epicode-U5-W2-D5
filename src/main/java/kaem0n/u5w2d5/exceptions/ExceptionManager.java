@@ -2,6 +2,7 @@ package kaem0n.u5w2d5.exceptions;
 
 import kaem0n.u5w2d5.payloads.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,5 +34,11 @@ public class ExceptionManager {
     public ErrorResponseDTO handleGenericError(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO("Internal server error.", LocalDateTime.now());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleMissingRequestParameter(MissingServletRequestParameterException e) {
+        return new ErrorResponseDTO(e.getMessage() + ".", LocalDateTime.now());
     }
 }
