@@ -48,6 +48,7 @@ public class EmployeeService {
         found.setUsername(payload.username());
         found.setName(payload.name());
         found.setSurname(payload.surname());
+        if (found.getAvatarUrl().contains("ui-avatars.com")) found.setAvatarUrl("https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         if (!Objects.equals(found.getEmail(), payload.email()) && !ed.existsByEmail(payload.email())) found.setEmail(payload.email());
         else if (!Objects.equals(found.getEmail(), payload.email()) && ed.existsByEmail(payload.email())) throw new BadRequestException("Email " + payload.email() + " is already taken.");
         return ed.save(found);
