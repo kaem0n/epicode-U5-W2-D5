@@ -28,4 +28,10 @@ public class Device {
         this.status = status;
         this.employee = employee;
     }
+
+    public Device(String type) {
+        this.type = type;
+        this.status = "Available";
+        this.employee = null;
+    }
 }
